@@ -70,11 +70,20 @@ class Emojifier {
 
     // COMPLETED (1): Create a static method called getClassifications() which logs the probability
     //  of each eye being open and that the person is smiling.
+
+    /**
+     * Method for logging the facial features of a given face
+     *
+     * @param face The face for which we want the facial features logged
+     *
+     */
     private static void getClassifications(Face face) {
         double leftEyeOpenProbability = face.getIsLeftEyeOpenProbability();
         Log.d(LOG_TAG, String.format("left eye open prob: %.02f", leftEyeOpenProbability ));
+
         double rightEyeOpenProbability = face.getIsRightEyeOpenProbability();
         Log.d(LOG_TAG, String.format("right eye open prob: %.02f", rightEyeOpenProbability ));
+
         double isSmilingProbability = face.getIsSmilingProbability();
         Log.d(LOG_TAG, String.format("smiling prob: %.02f", isSmilingProbability));
     }
