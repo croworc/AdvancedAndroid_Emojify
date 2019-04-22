@@ -50,9 +50,10 @@ class Emojifier {
 
         // Detect the faces
         SparseArray<Face> faces = detector.detect(frame);
+        int numFaces = faces.size();
 
         // Log the number of faces
-        Log.d(LOG_TAG, "detectFaces: number of faces = " + faces.size());
+        Log.d(LOG_TAG, "detectFaces: number of faces = " + numFaces);
 
         // If there are no faces detected, show a Toast message
         if(faces.size() == 0){
