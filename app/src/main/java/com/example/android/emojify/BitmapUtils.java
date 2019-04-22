@@ -20,6 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.support.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
@@ -73,6 +75,56 @@ class BitmapUtils {
 
         return BitmapFactory.decodeFile(imagePath);
     }
+
+    /**
+     * Method to rotate a bitmap based on an 'orientation' parameter that is based on
+     * exif data we've obtained from the original image (photo, in this case).
+     *
+     * @param bitmap The bitmap we want to rotate
+     * @param orientation The exif 'orientation' info we've obtained from the original photo.
+     * @return The bitmap, rotated, if required, in original state otherwise
+     * @see <a href="https://discussions.udacity.com/t/emojify-me-app-not-detecting-faces/243576/9">Udacity forum posting by ante.kristic81</a>
+     */
+    static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+        Matrix matrix = new Matrix();
+        if (orientation == ExifInterface.ORIENTATION_NORMAL) {
+            return bitmap;
+        } else if (orientation == ExifInterface.ORIENTATION_FLIP_HORIZONTAL) {
+            matrix.setScale(-1, 1);
+        } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            matrix.setRotate(180);
+        } else if (orientation == ExifInterface.ORIENTATION_FLIP_VERTICAL) {
+            matrix.setRotate(180);
+            matrix.postScale(-1, 1);
+        } else if (orientation == ExifInterface.ORIENTATION_TRANSPOSE) {
+            matrix.setRotate(90);
+            matrix.postScale(-1, 1);
+        } else if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            matrix.setRotate(90);
+        } else if (orientation == ExifInterface.ORIENTATION_TRANSVERSE) {
+            matrix.setRotate(-90);
+            matrix.postScale(-1, 1);
+        } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            matrix.setRotate(-90);
+        } else {
+            return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(
+                    bitmap,
+                    0,
+                    0,
+                    bitmap.getWidth(),
+                    bitmap.getHeight(),
+                    matrix,
+                    true);
+            bitmap.recycle();
+            return bmRotated;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    } // close method rotateBitmap()
 
     /**
      * Creates the temporary image file in the cache directory.
