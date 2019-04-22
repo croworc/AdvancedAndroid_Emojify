@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 
+    private static final String PHOTO_PATH = "photo_path";
+
     private ImageView mImageView;
 
     private Button mEmojifyButton;
@@ -65,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Restore the saved instance state -- if it has been saved before.
+        //   This app saves just the temporary file path string
+        if (savedInstanceState != null) {
+            mTempPhotoPath = savedInstanceState.getString(PHOTO_PATH);
+        }
+
         // Bind the views
         mImageView = findViewById(R.id.image_view);
         mEmojifyButton = findViewById(R.id.emojify_button);
@@ -72,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
         mSaveFab = findViewById(R.id.save_button);
         mClearFab = findViewById(R.id.clear_button);
         mTitleTextView = findViewById(R.id.title_text_view);
+    } // close method onCreate()
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Saving the temporary photo file path
+        outState.putString(PHOTO_PATH, mTempPhotoPath);
     }
 
     /**
