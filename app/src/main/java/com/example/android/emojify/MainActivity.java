@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_STORAGE_PERMISSION = 1;
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
+    private static final String EXTRAS_KEY_TMP_PHOTO_PATH = "extras_key_tmp_file_path";
 
     private ImageView mImageView;
 
@@ -65,13 +66,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Restore the temporary photo file path - in case we've rotated the device while taking
+        // the photo.
+        if (savedInstanceState != null) {
+            mTempPhotoPath = savedInstanceState.getString(EXTRAS_KEY_TMP_PHOTO_PATH);
+        }
+
         // Bind the views
-        mImageView = (ImageView) findViewById(R.id.image_view);
-        mEmojifyButton = (Button) findViewById(R.id.emojify_button);
-        mShareFab = (FloatingActionButton) findViewById(R.id.share_button);
-        mSaveFab = (FloatingActionButton) findViewById(R.id.save_button);
-        mClearFab = (FloatingActionButton) findViewById(R.id.clear_button);
-        mTitleTextView = (TextView) findViewById(R.id.title_text_view);
+        mImageView = findViewById(R.id.image_view);
+        mEmojifyButton = findViewById(R.id.emojify_button);
+        mShareFab = findViewById(R.id.share_button);
+        mSaveFab = findViewById(R.id.save_button);
+        mClearFab = findViewById(R.id.clear_button);
+        mTitleTextView = findViewById(R.id.title_text_view);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXTRAS_KEY_TMP_PHOTO_PATH, mTempPhotoPath);
     }
 
     /**
