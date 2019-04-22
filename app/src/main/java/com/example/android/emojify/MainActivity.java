@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-    }
+    } // close method launchCamera()
 
 
     @Override
