@@ -176,11 +176,12 @@ public class MainActivity extends AppCompatActivity {
             // Process the image and set it to the TextView
             processAndSetImage();
         } else {
-
-            // Otherwise, delete the temporary image file
+            // Otherwise, delete the temporary image file and log the error
             BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+            String errMsg = "Failed to take photo -- result code: " + resultCode;
+            Log.d(LOG_TAG, errMsg);
         }
-    }
+    } // close method onActivityResult()
 
     /**
      * Method for processing the captured image and setting it to the TextView.
