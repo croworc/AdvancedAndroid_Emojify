@@ -93,5 +93,17 @@ class Emojifier {
     }
 
 
-    // TODO (1): Create an enum class called Emoji that contains all the possible emoji you can make (smiling, frowning, left wink, right wink, left wink frowning, right wink frowning, closed eye smiling, close eye frowning).
+    // COMPLETED (1): Create an enum class called Emoji that contains all the possible emoji you can make
+    //  (smiling, frowning, left wink, right wink, left wink frowning, right wink frowning,
+    //  closed eye smiling, close eye frowning).
+    enum Emoji {
+        OPEN_EYES_SMILE,
+        CLOSED_EYES_SMILE,
+        OPEN_EYES_FROWN,
+        CLOSED_EYES_FROWN,
+        LEFT_WINK_SMILE,
+        RIGHT_WINK_SMILE,
+        LEFT_WINK_FROWN,
+        RIGHT_WINK_FROWN
+    }
 }
