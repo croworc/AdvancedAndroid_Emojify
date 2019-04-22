@@ -89,10 +89,43 @@ class Emojifier {
         Log.d(LOG_TAG, "whichEmoji: rightEyeOpenProb = "
                 + face.getIsRightEyeOpenProbability());
 
-        // TODO (3): Create threshold constants for a person smiling, and and eye being open by taking pictures of yourself and your friends and noting the logs.
-        // TODO (4): Create 3 boolean variables to track the state of the facial expression based on the thresholds you set in the previous step: smiling, left eye closed, right eye closed.
-        // TODO (5): Create an if/else system that selects the appropriate emoji based on the above booleans and log the result.
-    }
+        // COMPLETED (3): Create threshold constants for a person smiling, and an eye being open
+        //  by taking pictures of yourself and your friends and noting the logs.
+        final double threshold_smile = 0.5D;
+        final double threshold_eye_open = 0.5D;
+
+        // COMPLETED (4): Create 3 boolean variables to track the state of the facial expression
+        //  based on the thresholds you set in the previous step: smiling, left eye closed, right eye closed.
+        boolean isSmiling = face.getIsSmilingProbability() >= threshold_smile;
+        boolean isLeftWink = face.getIsLeftEyeOpenProbability() < threshold_eye_open;
+        boolean isRightWink = face.getIsRightEyeOpenProbability() < threshold_eye_open;
+
+        // COMPLETED (5): Create an if/else system that selects the appropriate emoji based on the above
+        //  booleans and log the result.
+        Emoji emoji;
+        if (isSmiling) {
+            if (isLeftWink && isRightWink) { // smiling w/ closed eyes
+                emoji = Emoji.SMILE_EYES_CLOSED;
+            } else if (isLeftWink) { // smiling w/ only left eye closed
+                emoji = Emoji.SMILE_LEFT_WINK;
+            } else if (isRightWink) { // smiling w/ only right eye closed
+                emoji = Emoji.SMILE_RIGHT_WINK;
+            } else { // smiling w/ open eyes
+                emoji = Emoji.SMILE_EYES_OPEN;
+            }
+        } else { // frowning
+            if (isLeftWink && isRightWink) { // frowning w/ both eyes closed
+                emoji = Emoji.FROWN_EYES_CLOSED;
+            } else if (isLeftWink) { // frowning w/ only left eye closed
+                emoji = Emoji.FROWN_LEFT_WINK;
+            } else if (isRightWink) { // frowning w/ only right eye closed
+                emoji = Emoji.FROWN_RIGHT_WINK;
+            } else {
+                emoji = Emoji.FROWN_EYES_OPEN;
+            }
+        } // close if (isSmiling)
+        Log.d(LOG_TAG, "chosen emoji: " + emoji);
+    } // close method whichEmoji()
 
 
     // COMPLETED (1): Create an enum class called Emoji that contains all the possible emoji you can make
