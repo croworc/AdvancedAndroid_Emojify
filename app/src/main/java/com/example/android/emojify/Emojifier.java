@@ -97,13 +97,13 @@ class Emojifier {
     //  (smiling, frowning, left wink, right wink, left wink frowning, right wink frowning,
     //  closed eye smiling, close eye frowning).
     enum Emoji {
-        OPEN_EYES_SMILE,
-        CLOSED_EYES_SMILE,
-        OPEN_EYES_FROWN,
-        CLOSED_EYES_FROWN,
-        LEFT_WINK_SMILE,
-        RIGHT_WINK_SMILE,
-        LEFT_WINK_FROWN,
-        RIGHT_WINK_FROWN
+        SMILE_EYES_OPEN,
+        SMILE_EYES_CLOSED,
+        FROWN_EYES_OPEN,
+        FROWN_EYES_CLOSED,
+        SMILE_LEFT_WINK,
+        SMILE_RIGHT_WINK,
+        FROWN_LEFT_WINK,
+        FROWN_RIGHT_WINK
     }
 }
