@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -39,6 +40,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import static com.example.android.emojify.BitmapUtils.rotateBitmap;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -47,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 
     private static final String PHOTO_PATH = "photo_path";
+
+    private ExifInterface exif; // to obtain photo orientation info, so we can possibly
+                                // rotate the image appropriately
 
     private ImageView mImageView;
 
@@ -172,6 +178,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // If the image capture activity was called and was successful
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Try to obtain an exif interface to the photo, so we can retrieve the orientation
+            //  information.
+            try {
+                exif = new ExifInterface(mTempPhotoPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Delete the temporary image file
+                BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+                Toast.makeText(this, "Couldn't obtain exif info for the photo", Toast.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+
             // Process the image and set it to the TextView
             processAndSetImage();
         } else {
@@ -195,6 +214,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Resample the saved image to fit the ImageView
         mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+
+        // Get the photo's orientation, so that we can rotate it appropriately, if required.
+        int photoOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL);
+
+        // Rotate the bitmap, if required
+        mResultsBitmap = rotateBitmap(mResultsBitmap, photoOrientation);
         
         // Detect the faces
         Emojifier.detectFaces(this, mResultsBitmap);
