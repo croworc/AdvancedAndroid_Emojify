@@ -189,9 +189,9 @@ public class MainActivity extends AppCompatActivity {
         // Toggle Visibility of the views
         mEmojifyButton.setVisibility(View.GONE);
         mTitleTextView.setVisibility(View.GONE);
-        mSaveFab.hide();
-        mShareFab.hide();
-        mClearFab.hide();
+        mSaveFab.show();
+        mShareFab.show();
+        mClearFab.show();
 
         // Resample the saved image to fit the ImageView
         mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
