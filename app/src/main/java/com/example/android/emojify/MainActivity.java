@@ -31,6 +31,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -43,6 +44,8 @@ import java.io.IOException;
 import static com.example.android.emojify.BitmapUtils.rotateBitmap;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = "MainActivity";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
@@ -177,28 +180,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // If the image capture activity was called and was successful
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Try to obtain an exif interface to the photo, so we can retrieve the orientation
-            //  information.
-            try {
-                exif = new ExifInterface(mTempPhotoPath);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+
+            if (resultCode == RESULT_OK) {
+                // Try to obtain an exif interface to the photo, so we can retrieve the orientation
+                //  information.
+                try {
+                    exif = new ExifInterface(mTempPhotoPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Delete the temporary image file
+                    BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+                    Toast.makeText(this, "Couldn't obtain exif info for the photo", Toast.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
+                // Process the image and set it to the TextView
+                processAndSetImage();
+
+            } else { // result code was not "OK"...
+                Toast.makeText(this, "Couldn't make a photo.", Toast.LENGTH_SHORT).show();
+                Log.d(LOG_TAG, "onActivityResult: result code = " + resultCode);
+
                 // Delete the temporary image file
                 BitmapUtils.deleteImageFile(this, mTempPhotoPath);
-                Toast.makeText(this, "Couldn't obtain exif info for the photo", Toast.LENGTH_SHORT)
-                        .show();
-                return;
-            }
+            } // close  if (resultCode == RESULT_OK) / else
 
-            // Process the image and set it to the TextView
-            processAndSetImage();
-        } else {
+        } // close if (requestCode == REQUEST_IMAGE_CAPTURE)
 
-            // Otherwise, delete the temporary image file
-            BitmapUtils.deleteImageFile(this, mTempPhotoPath);
-        }
-    }
+    } // close onActivityResult()
 
     /**
      * Method for processing the captured image and setting it to the TextView.
