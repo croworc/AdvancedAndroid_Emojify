@@ -230,15 +230,18 @@ public class MainActivity extends AppCompatActivity {
         int photoOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL);
 
+        Log.d(LOG_TAG, "processAndSetImage: orientation = " + photoOrientation);
+
         // Rotate the bitmap, if required
         mResultsBitmap = rotateBitmap(mResultsBitmap, photoOrientation);
-        
+
         // Detect the faces
         Emojifier.detectFaces(this, mResultsBitmap);
-        
+
         // Set the new bitmap to the ImageView
         mImageView.setImageBitmap(mResultsBitmap);
-    }
+
+    } // close method processAndSetImage()
 
 
     /**
