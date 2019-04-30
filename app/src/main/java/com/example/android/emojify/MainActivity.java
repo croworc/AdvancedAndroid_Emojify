@@ -26,10 +26,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,10 +43,14 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String LOG_TAG = "MainActivity";
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
+
+    private static final String EXTRAS_TEMP_FILE_PATH = "temp_file_path";
 
     private ImageView mImageView;
 
@@ -57,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String mTempPhotoPath;
 
+    private ExifInterface exif; // to obtain photo orientation info, so we can possibly
+                                //  rotate the image appropriately
+
     private Bitmap mResultsBitmap;
 
 
@@ -65,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Restore the path to the temporary photo file, if such a file already exists
+        if (savedInstanceState!= null) {
+            mTempPhotoPath = savedInstanceState.getString(EXTRAS_TEMP_FILE_PATH);
+        }
+
         // Bind the views
         mImageView = findViewById(R.id.image_view);
         mEmojifyButton = findViewById(R.id.emojify_button);
@@ -72,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         mSaveFab = findViewById(R.id.save_button);
         mClearFab = findViewById(R.id.clear_button);
         mTitleTextView = findViewById(R.id.title_text_view);
+    } // close method onCreate()
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Saving the temporary photo file path
+        outState.putString(EXTRAS_TEMP_FILE_PATH, mTempPhotoPath);
     }
 
     /**
@@ -149,22 +170,44 @@ public class MainActivity extends AppCompatActivity {
                 // Launch the camera activity
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-        }
-    }
+        } // close: if (we've got at least one activity which can handle the 'take photo' request)
+    } // close method launchCamera()
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If the image capture activity was called and was successful
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Process the image and set it to the TextView
-            processAndSetImage();
-        } else {
 
-            // Otherwise, delete the temporary image file
-            BitmapUtils.deleteImageFile(this, mTempPhotoPath);
-        }
-    }
+        // If the image capture activity was called and was successful
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+
+            if (resultCode == RESULT_OK) {
+                // Try to obtain an exif interface to the photo, so we can retrieve the orientation
+                //  information.
+                try {
+                    exif = new ExifInterface(mTempPhotoPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Delete the temporary image file
+                    BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+                    Toast.makeText(this, "Couldn't obtain exif info for the photo", Toast.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
+                // Process the image and set it to the TextView
+                processAndSetImage();
+
+            } else { // result code was not "OK"...
+                Toast.makeText(this, "Couldn't make a photo.", Toast.LENGTH_SHORT).show();
+                Log.d(LOG_TAG, "onActivityResult: result code = " + resultCode);
+
+                // Delete the temporary image file
+                BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+            } // close  if (resultCode == RESULT_OK) / else
+
+        } // close if (requestCode == REQUEST_IMAGE_CAPTURE)
+
+    } // close method onActivityResult()
 
     /**
      * Method for processing the captured image and setting it to the TextView.
@@ -180,14 +223,22 @@ public class MainActivity extends AppCompatActivity {
 
         // Resample the saved image to fit the ImageView
         mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
-        
+
+        // Get the photo's orientation, so that we can rotate it appropriately, if required.
+        int photoOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL);
+
+        // Rotate the bitmap, if required
+        mResultsBitmap = BitmapUtils.rotateBitmap(mResultsBitmap, photoOrientation);
+
+        // COMPLETED (10): Change the method call from detectFaces()
+        //  to detectFacesAndOverlayEmoji() and assign the result to mResultsBitmap.
         // Detect the faces
-        Emojifier.detectFaces(this, mResultsBitmap);
-        // TODO (10): Change the method call from detectFaces() to detectFacesAndOverlayEmoji() and assign the result to mResultsBitmap.
-        
+        mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap);
+
         // Set the new bitmap to the ImageView
         mImageView.setImageBitmap(mResultsBitmap);
-    }
+    } // close method processAndSetImage()
 
 
     /**
