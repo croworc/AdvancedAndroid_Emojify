@@ -48,13 +48,16 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    // COMPLETED (2): Replace all View declarations with Butterknife annotations
+    private static final String LOG_TAG = "MainActivity";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
 
+    private static final String EXTRA_PHOTO_PATH = "extra_photo_path";
+
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 
+    // COMPLETED (2): Replace all View declarations with Butterknife annotations
     @BindView(R.id.title_text_view) TextView             mTitleTextView;
     @BindView(R.id.image_view)      ImageView            mImageView;
     @BindView(R.id.emojify_button)  Button               mEmojifyButton;
@@ -70,9 +73,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Restore the path string to the temporary photo file, if it has been saved.
+        if (savedInstanceState != null) {
+            mTempPhotoPath = savedInstanceState.getString(EXTRA_PHOTO_PATH);
+        }
+
         // COMPLETED (3): Replace the findViewById calls with the Butterknife data binding
         // Bind the views
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the path string to the temporary photo file.
+        outState.putString(EXTRA_PHOTO_PATH, mTempPhotoPath);
     }
 
     /**
