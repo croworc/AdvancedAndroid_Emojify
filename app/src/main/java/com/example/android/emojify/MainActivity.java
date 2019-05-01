@@ -30,6 +30,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.exifinterface.media.ExifInterface;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -67,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String mTempPhotoPath;
     private Bitmap mResultsBitmap;
+    private ExifInterface exif; // to obtain photo orientation info, so we can possibly
+    // rotate the image appropriately
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             // Launch the camera if the permission exists
             launchCamera();
         }
-    }
+    } // close method emojifyMe()
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -128,8 +133,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             }
+            default:
+                break;
         }
-    }
+    } // close method onRequestPermissionsResult()
 
     /**
      * Creates a temporary image file and captures a picture to store in it.
