@@ -32,7 +32,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
-    // TODO (1): Add Butterknife library and annotations dependency
+    // COMPLETED (1): Add Butterknife library and annotations dependency
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     androidTestImplementation 'junit:junit:4.12'
