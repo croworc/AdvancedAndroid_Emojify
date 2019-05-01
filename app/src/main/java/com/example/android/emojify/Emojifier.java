@@ -205,9 +205,9 @@ class Emojifier {
 
         // Determine the emoji position so it best lines up with the face
         float emojiPositionX =
-                (face.getPosition().x + face.getWidth() / 2) - emojiBitmap.getWidth() / 2;
+                (face.getPosition().x + face.getWidth() / 2) - emojiBitmap.getWidth() / 2.0f;
         float emojiPositionY =
-                (face.getPosition().y + face.getHeight() / 2) - emojiBitmap.getHeight() / 3;
+                (face.getPosition().y + face.getHeight() / 2) - emojiBitmap.getHeight() / 3.0f;
 
         // Create the canvas and draw the bitmaps to it
         Canvas canvas = new Canvas(resultBitmap);

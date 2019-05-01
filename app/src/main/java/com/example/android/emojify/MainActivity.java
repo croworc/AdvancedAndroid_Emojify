@@ -24,17 +24,20 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,12 +72,12 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO (3): Replace the findViewById calls with the Butterknife data binding
         // Bind the views
-        mImageView = (ImageView) findViewById(R.id.image_view);
-        mEmojifyButton = (Button) findViewById(R.id.emojify_button);
-        mShareFab = (FloatingActionButton) findViewById(R.id.share_button);
-        mSaveFab = (FloatingActionButton) findViewById(R.id.save_button);
-        mClearFab = (FloatingActionButton) findViewById(R.id.clear_button);
-        mTitleTextView = (TextView) findViewById(R.id.title_text_view);
+        mImageView = findViewById(R.id.image_view);
+        mEmojifyButton = findViewById(R.id.emojify_button);
+        mShareFab = findViewById(R.id.share_button);
+        mSaveFab = findViewById(R.id.save_button);
+        mClearFab = findViewById(R.id.clear_button);
+        mTitleTextView = findViewById(R.id.title_text_view);
     }
 
     /**
@@ -177,9 +180,9 @@ public class MainActivity extends AppCompatActivity {
         // Toggle Visibility of the views
         mEmojifyButton.setVisibility(View.GONE);
         mTitleTextView.setVisibility(View.GONE);
-        mSaveFab.setVisibility(View.VISIBLE);
-        mShareFab.setVisibility(View.VISIBLE);
-        mClearFab.setVisibility(View.VISIBLE);
+        mSaveFab.show();
+        mShareFab.show();
+        mClearFab.show();
 
         // Resample the saved image to fit the ImageView
         mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
@@ -233,9 +236,9 @@ public class MainActivity extends AppCompatActivity {
         mImageView.setImageResource(0);
         mEmojifyButton.setVisibility(View.VISIBLE);
         mTitleTextView.setVisibility(View.VISIBLE);
-        mShareFab.setVisibility(View.GONE);
-        mSaveFab.setVisibility(View.GONE);
-        mClearFab.setVisibility(View.GONE);
+        mShareFab.hide();
+        mSaveFab.hide();
+        mClearFab.hide();
 
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
