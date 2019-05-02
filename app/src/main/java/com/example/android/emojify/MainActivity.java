@@ -73,7 +73,12 @@ public class MainActivity extends AppCompatActivity {
         // Bind the views
         ButterKnife.bind(this);
 
-        // TODO (2): Set up Timber
+        // COMPLETED (2): Set up Timber
+        //  --> I've added an application class EmojifierApplication.
+        //  In its onCreate() method, I've planted a Timber DebugTree (i.e. installed an instance
+        //  of this logging class).
+        //  In Addition, one has to add an android:name attribute to the application tag in the
+        //  AndroidManifest file, pointing to this new application class, so Android knows about it.
     }
 
     /**
