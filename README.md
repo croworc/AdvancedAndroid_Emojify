@@ -3,8 +3,8 @@
 This is the toy app for the Libraries lesson of the [Advanced Android App Development course on Udacity](https://www.udacity.com/course/advanced-android-app-development--ud855).
 
 ## My take on the challenges
-I've implemented my solutions within the indiviual excercise branches.
-So if you'd like to see how I have tackled any given excercise, just checkout the respective branch, e.g. `TLIB.01-Exercise-AddGradleDependency`
+I've implemented my solutions within the individual exercise branches.
+So if you'd like to see how I have tackled any given exercise, just checkout the respective branch, e.g. `TLIB.01-Exercise-AddGradleDependency`
 
 
 ### Access all branches from this tab
@@ -17,10 +17,10 @@ The branches are also accessible from the drop-down in the "Code" tab
 ![branchesdropdown](https://d17h27t6h515a5.cloudfront.net/topher/2017/April/590391a3_branches-dropdown-ud855/branches-dropdown-ud855.png
 )
 
-Below, you'll find Udacity's description of how to use their repo in conjunction w/ their course. Please clone your own repo from [**Udacity's repo**](https://github.com/udacity/AdvancedAndroid_Emojify.git) (not from this repo), so you can complete the excercises yourself.
+Below, you'll find Udacity's description of how to use their repo in conjunction w/ their course. Please clone your own repo from [**Udacity's repo**](https://github.com/udacity/AdvancedAndroid_Emojify.git) (not from this repo), so you can complete the exercises yourself.
 
 
-I've upgraded the support libraries to the latest non-JetPack version (28.0.0) in some excercise branches, but migrated the project to AndroidX in all the other ones. Either way, this project uses Gradle version 5.1.1 and the Android Gradle plugin version 3.4.0 so you'll need Android Studio version 3.4 or higher.
+I've upgraded the support libraries to the latest non-JetPack version (28.0.0) in some exercise branches, but migrated the project to AndroidX in all the other ones. Either way, this project uses Gradle version 5.1.1 and the Android Gradle plugin version 3.4.0 so you'll need Android Studio version 3.4 or higher.
 
 
 
